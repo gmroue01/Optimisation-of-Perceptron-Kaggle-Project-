@@ -4,10 +4,11 @@ import numpy as np
 from scipy.sparse import vstack
 from Perceptron import Perceptron_GD
 import matplotlib.pyplot as plt
+from OptimalStep import puissance
 
 if __name__ == "__main__":
     
-    data = scipy.io.loadmat("data_doc.mat",squeeze_me=True,struct_as_record=False)
+    data = scipy.io.loadmat("./data/data_doc.mat",squeeze_me=True,struct_as_record=False)
     # Input
     X = data['Xts'].tocsr()
     # Label
@@ -15,8 +16,14 @@ if __name__ == "__main__":
     #Validation
     X_vr = data['Xvr'].tocsr()
 
+    n = X.shape[0]
+    # Calcul de Hessienne
+    H = (1/n)*X@X.T
 
-    model = Perceptron_GD(learning_rate=0.01,n_iters=100)
+    # Calcul de la valeur propre maximum de H
+    L = puissance(H)
+
+    model = Perceptron_GD(learning_rate=1/L,n_iters=100)
     model.fit(X,y_ts)
 
     # Plot the loss history
@@ -24,7 +31,7 @@ if __name__ == "__main__":
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.title("Loss History")
-    plt.savefig("loss_history.png")
+    plt.savefig("./results/loss_history.png")
     print("Loss history saved to loss_history.png")
 
 
