@@ -1,5 +1,5 @@
 # 1. Image de base (choisis une version slim pour gagner de la place)
-FROM python:3.10-slim
+FROM python:3.9-slim
 
 WORKDIR /app
 
