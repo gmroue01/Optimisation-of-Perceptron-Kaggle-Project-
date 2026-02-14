@@ -1,0 +1,6 @@
+.git
+__pycache__/
+venv/
+.env
+data/        # Si tes données sont trop lourdes, on utilise des volumes plutôt
+*.ipynb
