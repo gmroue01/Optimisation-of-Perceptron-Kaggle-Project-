@@ -5,6 +5,7 @@ from scipy.sparse import vstack
 from Perceptron import Perceptron_GD
 import matplotlib.pyplot as plt
 from OptimalStep import puissance
+from Metrics import Metrics
 
 if __name__ == "__main__":
     

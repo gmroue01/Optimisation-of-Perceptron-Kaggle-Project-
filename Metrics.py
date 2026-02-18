@@ -31,11 +31,17 @@ class Metrics:
     def precision_score(self):
         self.precision = self.TP/(self.TP + self.FP)
 
+    def transform_metrics(self):
+        print("----------------------------------------------")
+        self.accuracy_score()
+        print(f"Accuracy : {self.accuracy}\n")
 
-y_true = np.concatenate((np.zeros((1, 50)), np.zeros((1, 50))), axis=1)
-y_pred = np.concatenate((np.ones((1, 50)), np.ones((1, 50))), axis=1)
+        self.mse_loss_scores()
+        print(f"MSE loss : {self.mse_loss}\n")
 
+        self.recall_score()
+        print(f"Recall : {self.recall}\n")
 
-m = Metrics(y_pred=y_pred, y_true=y_true)
-m.recall_score()
-print(m.recall)
+        self.precision_score()
+        print(f"Precision : {self.precision}\n")
+        print("------------------------------------------")
