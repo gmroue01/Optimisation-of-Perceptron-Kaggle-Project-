@@ -56,10 +56,12 @@ class Perceptron_GD:
             self.W = self.W - self.lr * grad_W
             self.bias = self.bias - self.lr*grad_B
 
+ 
     def predict(self, X):
-        linear_product = self.W.T@X + self.bias
-
-        return np.where(linear_product >= 0, 1, 0)
+        # On passe par la sigmoïde pour être cohérent avec l'entraînement
+        z = self.W.T @ X + self.bias
+        probabilities = self.activation_func(z)
+        return np.where(probabilities >= 0.5, 1, 0)
 
 
 # model = Perceptron_GD(learning_rate=0.001)
