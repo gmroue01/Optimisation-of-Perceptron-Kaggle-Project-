@@ -2,61 +2,62 @@
 import scipy.io
 import numpy as np
 from scipy.sparse import vstack
+
+
 class Perceptron_GD:
 
-  def __init__(self,learning_rate=0.01,n_iters=100):
-    self.lr = learning_rate
-    self.n_iters = n_iters
-    self.W = None
-    self.bias = None
-    self.loss_history = []
+    def __init__(self, input_size, output_size, learning_rate=0.01, n_iters=100):
+        self.lr = learning_rate
+        self.n_iters = n_iters
+        self.input_size = input_size
+        self.output_size = output_size
+        self.W = None
+        self.bias = None
+        self.loss_history = []
 
   def activation_func(self,z):
-    #Sigmoide
-    return (1+np.exp(z))**(-1)
+    #Fonction echellon
+    return np.where(z >= 0,1,0)
 
-  def mse_loss(self,y_pred,y_true):
-    return np.mean((y_true - y_pred)**2)
+    def mse_loss(self, y_pred, y_true):
+        return np.mean((y_true - y_pred)**2)
 
-  def oracle(self,X,y_true):
-    n = X.shape[0]
+    def oracle(self, X, y_true):
+        n = X.shape[1]
 
-    residuals = self.W @ X - y_true
+        residuals = self.W.T@X + self.bias
+        y_pred = self.activation_func(residuals)
 
-    gradient_W = (1/n)*(residuals@X.T)
+        dL_dy = y_pred - y_true
 
-    gradient_B = (1/n)*sum(residuals)
+        dy_dz = self.deriative_sigmoid(residuals)
 
+        Error_Sigmoid = (1/n*(dL_dy*dy_dz))
 
-    return gradient_W, gradient_B
+        gradient_W = X@Error_Sigmoid.T
 
+        gradient_B = np.sum(Error_Sigmoid)
 
+        return gradient_W, gradient_B, y_pred
 
-  def fit(self,X,y):
+    def fit(self, X, y_true):
 
-      n_features = X.shape[0]
+        self.W = np.random.randn(self.input_size, self.output_size)*0.01
+        self.bias = np.zeros((self.output_size, 1))
 
+        for k in range(self.n_iters):
+            grad_W, grad_B, y_pred = self.oracle(X, y_true)
 
-      self.W = np.ones((1,n_features))
-      self.bias = 0.0
+            loss = self.mse_loss(y_pred, y_true)
+            self.loss_history.append(loss)
 
+            self.W = self.W - self.lr * grad_W
+            self.bias = self.bias - self.lr*grad_B
 
+    def predict(self, X):
+        linear_product = self.W.T@X + self.bias
 
-      for k in range(self.n_iters):
-
-        y_pred = (self.W@X) + self.bias
-        l = self.mse_loss(y_pred,y)
-        self.loss_history.append(l)
-        grad_W, grad_B = self.oracle(X,y)
-        self.W = self.W - self.lr * grad_W
-        self.bias = self.bias - self.lr*grad_B
-
-  def predict(self,X):
-    linear_product = self.W @ X + self.bias
-
-    return np.where(linear_product >= 0, 1,0)
-
-
+        return np.where(linear_product >= 0, 1, 0)
 
 
 # model = Perceptron_GD(learning_rate=0.001)
