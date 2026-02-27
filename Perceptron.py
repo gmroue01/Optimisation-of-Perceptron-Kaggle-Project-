@@ -1,7 +1,6 @@
 
-import scipy.io
 import numpy as np
-from scipy.sparse import vstack
+
 
 
 class Perceptron_GD:
@@ -15,10 +14,13 @@ class Perceptron_GD:
         self.bias = None
         self.loss_history = []
 
-  def activation_func(self,z):
-    #Fonction echellon
-    return np.where(z >= 0,1,0)
+    def activation_func(self,z):
 
+        return 1/(1+np.exp(-z))
+
+    def deriative_sigmoid(self,z):
+        sig = self.activation_func(z)
+        return sig*(1-sig)
     def mse_loss(self, y_pred, y_true):
         return np.mean((y_true - y_pred)**2)
 
@@ -28,7 +30,7 @@ class Perceptron_GD:
         residuals = self.W.T@X + self.bias
         y_pred = self.activation_func(residuals)
 
-        dL_dy = y_pred - y_true
+        dL_dy = 2*(y_pred - y_true)
 
         dy_dz = self.deriative_sigmoid(residuals)
 
