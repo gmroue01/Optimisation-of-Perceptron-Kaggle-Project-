@@ -12,8 +12,8 @@ class Perceptron_GD:
     self.loss_history = []
 
   def activation_func(self,z):
-    #Fonction echellon
-    return np.where(z >= 0,1,0)
+    #Sigmoide
+    return (1+np.exp(z))**(-1)
 
   def mse_loss(self,y_pred,y_true):
     return np.mean((y_true - y_pred)**2)
