@@ -2,7 +2,6 @@
 import numpy as np
 
 
-
 class Perceptron_GD:
 
     def __init__(self, input_size, output_size, learning_rate=0.01, n_iters=100):
@@ -14,13 +13,14 @@ class Perceptron_GD:
         self.bias = None
         self.loss_history = []
 
-    def activation_func(self,z):
+    def activation_func(self, z):
 
         return 1/(1+np.exp(-z))
 
-    def deriative_sigmoid(self,z):
+    def deriative_sigmoid(self, z):
         sig = self.activation_func(z)
         return sig*(1-sig)
+
     def mse_loss(self, y_pred, y_true):
         return np.mean((y_true - y_pred)**2)
 
@@ -38,13 +38,13 @@ class Perceptron_GD:
 
         gradient_W = X@Error_Sigmoid.T
 
-        gradient_B = np.sum(Error_Sigmoid)
+        gradient_B = np.sum(Error_Sigmoid, axis=1, keepdims=True)
 
         return gradient_W, gradient_B, y_pred
 
     def fit(self, X, y_true):
 
-        self.W = np.random.randn(self.input_size, self.output_size)*0.01
+        self.W = np.random.randn(self.input_size, self.output_size)*0.001
         self.bias = np.zeros((self.output_size, 1))
 
         for k in range(self.n_iters):
@@ -56,15 +56,14 @@ class Perceptron_GD:
             self.W = self.W - self.lr * grad_W
             self.bias = self.bias - self.lr*grad_B
 
- 
     def predict(self, X):
-        # On passe par la sigmoïde pour être cohérent avec l'entraînement
-        z = self.W.T @ X + self.bias
-        probabilities = self.activation_func(z)
-        return np.where(probabilities >= 0.5, 1, 0)
+        print("predict X", X.shape)
+        print("W :", self.W.shape)
+        print("bias : ", self.bias.shape)
+        linear_product = self.W.T @ X + self.bias
+        return np.argmax(linear_product, axis=0)
 
+        # model = Perceptron_GD(learning_rate=0.001)
 
-# model = Perceptron_GD(learning_rate=0.001)
-
-# model.fit(X,y_ts)
-# plt.plot(model.loss_history)
+        # model.fit(X,y_ts)
+        # plt.plot(model.loss_history)
