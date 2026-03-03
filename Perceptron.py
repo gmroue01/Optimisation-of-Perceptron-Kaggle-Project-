@@ -48,12 +48,9 @@ class Perceptron_GD:
         self.bias = np.random.randn(self.output_size, 1)
 
         for k in range(self.n_iters):
+            grad_W, grad_B, y_pred = self.oracle(X, y_true)
 
-            index = np.random.randint(0, X.shape[1])
-            x, y_tr = X[:, index], y_true[index]
-            grad_W, grad_B, y_pred = self.oracle(x, y_tr)
-
-            loss = self.mse_loss(y_pred, y_tr)
+            loss = self.mse_loss(y_pred, y_true)
             self.loss_history.append(loss)
 
             self.W = self.W - self.lr * grad_W
