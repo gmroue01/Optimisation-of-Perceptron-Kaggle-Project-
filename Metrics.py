@@ -8,9 +8,11 @@ class Metrics:
         self.y_true = y_true
 
         self.y_pred_classes = y_pred.flatten()
-        self.y_true_classes = y_true.flatten()
 
-        self.size = len(y_true)
+        self.y_true_classes = y_true.flatten()
+        
+        
+        self.size = len(self.y_true_classes)
         self.classes = np.unique(np.concatenate(
             (self.y_true_classes, self.y_pred_classes)))
 

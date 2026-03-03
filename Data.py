@@ -25,16 +25,19 @@ class DataPreprocessing:
         for index, value in enumerate(self.y_ts.flatten()):
 
             self.y_one_hot[value - 1, index] = 1
+
         self.seed = seed
         self.X_train = None
         self.y_train = None
+        self.y_train_vector = None
         self.X_test = None
         self.y_test = None
+        self.y_test_vector = None
 
     def fit(self):
 
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-            self.X.T, self.y_one_hot.T, test_size=0.2, random_state=self.seed)
+            self.X.T, self.y_one_hot.T, test_size=0.2, random_state=self.seed, shuffle=True)
 
         self.X_train = self.X_train.T
         self.X_test = self.X_test.T
@@ -42,15 +45,21 @@ class DataPreprocessing:
         self.y_train = self.y_train.T
         self.y_test = self.y_test.T
 
+        self.y_train_vector = np.argmax(self.y_train, axis=0)
+        self.y_train_vector += 1
+        self.y_test_vector = np.argmax(self.y_test, axis=0)
+        self.y_test_vector += 1
+
         return self.X_train, self.y_train, self.X_test, self.y_test
 
     def transform(self):
-
-        # Définition de la matrice Y
-
+        print("X_train shape : ", self.X_train.shape)
+        print("X_test shape : ", self.X_test.shape)
         scaler = StandardScaler(with_mean=False)
 
-        self.X_train = scaler.fit_transform(self.X_train)
-        self.X_test = scaler.fit_transform(self.X_test)
-
+        self.X_train = scaler.fit_transform(self.X_train.T).T
+        self.X_test = scaler.transform(self.X_test.T).T
         return self.X_train, self.X_test
+
+    def getY_train_test_vector(self):
+        return self.y_test_vector, self.y_train_vector

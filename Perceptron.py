@@ -61,7 +61,11 @@ class Perceptron_GD:
         print("W :", self.W.shape)
         print("bias : ", self.bias.shape)
         linear_product = self.W.T @ X + self.bias
-        return np.argmax(linear_product, axis=0)
+        probabilities = self.activation_func(linear_product)
+
+        predicted_classes = np.argmax(probabilities, axis=0)
+        
+        return predicted_classes
 
         # model = Perceptron_GD(learning_rate=0.001)
 
