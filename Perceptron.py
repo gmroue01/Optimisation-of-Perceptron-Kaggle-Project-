@@ -44,13 +44,16 @@ class Perceptron_GD:
 
     def fit(self, X, y_true):
 
-        self.W = np.random.randn(self.input_size, self.output_size)*0.001
-        self.bias = np.zeros((self.output_size, 1))
+        self.W = np.random.randn(self.input_size, self.output_size)
+        self.bias = np.random.randn(self.output_size, 1)
 
         for k in range(self.n_iters):
-            grad_W, grad_B, y_pred = self.oracle(X, y_true)
 
-            loss = self.mse_loss(y_pred, y_true)
+            index = np.random.randint(0, X.shape[1])
+            x, y_tr = X[:, index], y_true[index]
+            grad_W, grad_B, y_pred = self.oracle(x, y_tr)
+
+            loss = self.mse_loss(y_pred, y_tr)
             self.loss_history.append(loss)
 
             self.W = self.W - self.lr * grad_W
