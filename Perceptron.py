@@ -44,7 +44,7 @@ class Perceptron_GD:
 
     def fit(self, X, y_true):
 
-        self.W = np.random.randn(self.input_size, self.output_size)
+        self.W = np.random.randn(self.input_size, self.output_size)*0.01
         self.bias = np.random.randn(self.output_size, 1)
 
         for k in range(self.n_iters):
@@ -64,7 +64,7 @@ class Perceptron_GD:
         probabilities = self.activation_func(linear_product)
 
         predicted_classes = np.argmax(probabilities, axis=0)
-        
+
         return predicted_classes
 
         # model = Perceptron_GD(learning_rate=0.001)

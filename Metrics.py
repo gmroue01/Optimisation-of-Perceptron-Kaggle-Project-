@@ -1,17 +1,32 @@
 import numpy as np
 
 
+import numpy as np
+
+
 class Metrics:
 
     def __init__(self, y_pred, y_true):
+        # 1. Traitement des prédictions
+        if y_pred.ndim > 1:
+            # ou axis=1 selon l'orientation
+            self.y_pred_classes = np.argmax(y_pred, axis=0)
+        else:
+            self.y_pred_classes = y_pred.flatten()
+
+        # 2. Traitement des vraies valeurs (LA CORRECTION EST ICI)
+        if y_true.ndim > 1:
+            # Si c'est une matrice (ex: 20 x 2792)
+            self.y_true_classes = np.argmax(y_true, axis=0)
+        else:
+            # Si c'est déjà un vecteur (ex: 2792,)
+            self.y_true_classes = y_true.flatten()
+
+        # Sauvegarde des valeurs brutes
         self.y_pred = y_pred
         self.y_true = y_true
 
-        self.y_pred_classes = y_pred.flatten()
-
-        self.y_true_classes = y_true.flatten()
-        
-        
+        # Maintenant, self.y_true_classes est forcément un tableau, donc len() fonctionnera !
         self.size = len(self.y_true_classes)
         self.classes = np.unique(np.concatenate(
             (self.y_true_classes, self.y_pred_classes)))
@@ -26,7 +41,10 @@ class Metrics:
         self.accuracy = correct_prediction / self.size
 
     def mse_loss_scores(self):
-        self.mse_loss = np.mean((self.y_true - self.y_pred)**2)
+        # On utilise les vecteurs de classes fraîchement créés et de même taille !
+        self.mse_loss = np.mean((self.y_true_classes - self.y_pred_classes)**2)
+
+    # ... (Le reste de votre code pour precision_recall_scores et transform_metrics ne change pas) ...
 
     def precision_recall_scores(self):
         precisions = []

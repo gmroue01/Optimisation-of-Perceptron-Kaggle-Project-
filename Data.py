@@ -35,7 +35,6 @@ class DataPreprocessing:
         self.y_test_vector = None
 
     def fit(self):
-
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             self.X.T, self.y_one_hot.T, test_size=0.2, random_state=self.seed, shuffle=True)
 
@@ -45,10 +44,9 @@ class DataPreprocessing:
         self.y_train = self.y_train.T
         self.y_test = self.y_test.T
 
+        # On garde les classes de 0 à 19 !
         self.y_train_vector = np.argmax(self.y_train, axis=0)
-        self.y_train_vector += 1
         self.y_test_vector = np.argmax(self.y_test, axis=0)
-        self.y_test_vector += 1
 
         return self.X_train, self.y_train, self.X_test, self.y_test
 

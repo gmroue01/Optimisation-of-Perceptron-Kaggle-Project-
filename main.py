@@ -25,7 +25,7 @@ if __name__ == "__main__":
     y_test_vector, y_train_vector = d.getY_train_test_vector()
 
     model = Perceptron_GD(
-        input_size=X_train.shape[0], output_size=20, learning_rate=1e-3, n_iters=100)
+        input_size=X_train.shape[0], output_size=20, learning_rate=1, n_iters=100)
     model.fit(X_train, y_train)
 
     # # # Plot the loss history
@@ -36,8 +36,13 @@ if __name__ == "__main__":
     plt.savefig("./results/loss_history.png")
     print("Loss history saved to loss_history.png")
 
-    y_pred = model.predict(X_test)
-    print(y_pred)
-    metrics = Metrics(y_pred=y_pred, y_true=y_test_vector)
+    y_pred_test = model.predict(X_test)
+    print(y_pred_test)
+
+    print("Forme de y_pred :", y_pred_test.shape,
+          "| 5 premières valeurs :", y_pred_test[:5])
+    print("Forme de y_true :", y_test.shape,
+          "| 5 premières valeurs :", y_test[:5])
+    metrics = Metrics(y_pred=y_pred_test, y_true=y_test_vector)
 
     metrics.transform_metrics()
