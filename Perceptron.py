@@ -48,13 +48,23 @@ class Perceptron_GD:
         self.bias = np.zeros((self.output_size, 1))
 
         for k in range(self.n_iters):
-            grad_W, grad_B, y_pred = self.oracle(X, y_true)
+            epoch_loss = 0.0
+            for i in range(X.shape[1]):
+                x = X[:,i]
+                y_tr = y_true[i]
 
-            loss = self.mse_loss(y_pred, y_true)
-            self.loss_history.append(loss)
+                grad_W, grad_B, y_pred = self.oracle(x, y_tr)
 
-            self.W = self.W - self.lr * grad_W
-            self.bias = self.bias - self.lr*grad_B
+                loss = self.mse_loss(y_pred, y_tr)
+                epoch_loss += loss
+                self.loss_history.append(loss)
+
+                self.W = self.W - self.lr * grad_W
+                self.bias = self.bias - self.lr*grad_B
+        if (k + 1) % 10 == 0:
+                print(f"Époque {k+1}/{self.n_iters}")
+                loss_mean = epoch_loss/X.shape[0]
+                print(f"loss_mean : {loss_mean}")
 
     def predict(self, X):
         print("predict X", X.shape)

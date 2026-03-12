@@ -24,7 +24,7 @@ if __name__ == "__main__":
     # print(f"La valeur propre de module maximum vaut {L}")
 
     model = Perceptron_GD(
-        input_size=X_train.shape[0], output_size=20, learning_rate=1e-3, n_iters=100)
+        input_size=X_train.shape[0], output_size=20, learning_rate=1e-3, n_iters=10)
     model.fit(X_train, y_train)
 
     # # Plot the loss history
