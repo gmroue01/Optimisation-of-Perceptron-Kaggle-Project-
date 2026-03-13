@@ -25,6 +25,9 @@ class Perceptron_GD:
         return np.mean((y_true - y_pred)**2)
 
     def oracle(self, X, y_true):
+
+       
+
         n = X.shape[1]
 
         residuals = self.W.T@X + self.bias
@@ -36,6 +39,7 @@ class Perceptron_GD:
 
         Error_Sigmoid = (1/n*(dL_dy*dy_dz))
 
+
         gradient_W = X@Error_Sigmoid.T
 
         gradient_B = np.sum(Error_Sigmoid, axis=1, keepdims=True)
@@ -44,34 +48,40 @@ class Perceptron_GD:
 
     def fit(self, X, y_true):
 
-        self.W = np.random.randn(self.input_size, self.output_size)*0.001
-        self.bias = np.zeros((self.output_size, 1))
-
+        self.W = np.random.randn(self.input_size, self.output_size)*0.01
+        self.bias = np.random.randn(self.output_size, 1)*0.01
+        n_samples = X.shape[1]
         for k in range(self.n_iters):
             epoch_loss = 0.0
-            for i in range(X.shape[1]):
-                x = X[:,i]
-                y_tr = y_true[i]
+            indices = np.random.permutation(n_samples)
+            for i in indices:
+                x = X[:,i:i+1]
+                y_tr = y_true[:, i:i+1]
 
                 grad_W, grad_B, y_pred = self.oracle(x, y_tr)
 
                 loss = self.mse_loss(y_pred, y_tr)
                 epoch_loss += loss
-                self.loss_history.append(loss)
+                
 
                 self.W = self.W - self.lr * grad_W
                 self.bias = self.bias - self.lr*grad_B
-        if (k + 1) % 10 == 0:
-                print(f"Époque {k+1}/{self.n_iters}")
-                loss_mean = epoch_loss/X.shape[0]
-                print(f"loss_mean : {loss_mean}")
+
+
+            
+            print(f"Époque {k+1}/{self.n_iters}")
+            loss_mean = epoch_loss/X.shape[0]
+            self.loss_history.append(loss_mean)
+
+            print(f"loss_mean : {loss_mean}")
 
     def predict(self, X):
         print("predict X", X.shape)
         print("W :", self.W.shape)
         print("bias : ", self.bias.shape)
         linear_product = self.W.T @ X + self.bias
-        return np.argmax(linear_product, axis=0)
+        prob = self.activation_func(linear_product)
+        return np.argmax(prob, axis=0)
 
         # model = Perceptron_GD(learning_rate=0.001)
 

@@ -4,6 +4,7 @@ import numpy as np
 from scipy.sparse import vstack
 from Perceptron import Perceptron_GD
 from Data import DataPreprocessing
+from conditionNumber import computeConditionNumber
 import matplotlib.pyplot as plt
 from OptimalStep import puissance
 from Metrics import Metrics
@@ -16,18 +17,15 @@ if __name__ == "__main__":
 
     X_train, y_train, X_test, y_test = d.fit()
     # Calcul de Hessienne
-
+    print(y_train.shape)
     X_train, X_test = d.transform()
-    # Calcul de la valeur propre maximum de H
-    # print("Calcul de la valeur propre de module maximum")
-    # L = puissance(H)
-    # print(f"La valeur propre de module maximum vaut {L}")
+    computeConditionNumber(X_train)
+    
+    model = Perceptron_GD(input_size=X_train.shape[0], output_size=20, learning_rate=1, n_iters=5)
 
-    model = Perceptron_GD(
-        input_size=X_train.shape[0], output_size=20, learning_rate=1e-3, n_iters=10)
     model.fit(X_train, y_train)
 
-    # # Plot the loss history
+    # # # Plot the loss history
     plt.plot(model.loss_history)
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
